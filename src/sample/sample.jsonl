@@ -1,0 +1,12 @@
+{"id":"s01","prompt":"What is the capital of France?","responses":["The capital of France is Paris.","Paris is the capital and largest city of France."]}
+{"id":"s02","prompt":"한국의 수도는 어디인가요?","responses":["한국의 수도는 서울입니다.","서울특별시가 대한민국의 수도입니다. 정치와 경제의 중심지이기도 합니다."]}
+{"id":"s03","prompt":"Explain what a hash map is in one sentence.","responses":["A hash map stores key-value pairs and finds a value quickly by hashing its key.","A hash map is a data structure that maps keys to values using a hash function for fast lookup."]}
+{"id":"s04","prompt":"파이썬에서 리스트의 길이를 구하는 방법은?","responses":["len(my_list)를 쓰면 됩니다.","내장 함수 len()에 리스트를 넘기면 원소 개수를 돌려줍니다. 예: len([1, 2, 3])은 3입니다."]}
+{"id":"s05","prompt":"Say hello.","responses":["Hello! How can I help you today?","Hello! How can I help you today?"]}
+{"id":"s06","prompt":"Give me a fun fact about octopuses.","responses":["Octopuses have three hearts and blue blood.",""]}
+{"id":"s07","prompt":"What does HTTP stand for?","responses":["HyperText Transfer Protocol.","HTTP stands for HyperText Transfer Protocol. It is the application-level protocol that web browsers and servers use to exchange pages, images, and other resources, built on a simple request and response model where the client asks and the server answers."]}
+{"id":"s08","prompt":"Suggest a name for a pet goldfish.","responses":["How about Bubbles?","You could call it Goldie."]}
+{"id":"s09","prompt":"Suggest a name for a pet goldfish.","responses":["Nemo is a classic choice.","Maybe Finley, a friendly name."]}
+{"id":"s10","prompt":[{"role":"user","content":"Translate 'good morning' into Korean."}],"responses":["좋은 아침입니다 (joeun achimimnida).","'좋은 아침' 또는 '안녕하세요'라고 하면 됩니다."]}
+{"id":"s11","prompt":[{"role":"user","content":"I need a quick snack idea."},{"role":"assistant","content":"Do you prefer sweet or salty?"},{"role":"user","content":"Salty, please."}],"responses":["Try roasted chickpeas with a little salt and paprika.","Popcorn with sea salt is quick and light."]}
+{"id":"s12","prompt":"Name a primary color.","responses":["Red is a primary color.","Blue is one of the primary colors.","Yellow, in the traditional painter's model."]}

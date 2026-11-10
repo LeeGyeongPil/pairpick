@@ -1,0 +1,12 @@
+{"prompt":"What is the capital of France?","completion":"The capital of France is Paris.","label":true}
+{"prompt":"What is the capital of France?","completion":"Paris is the capital and largest city of France.","label":false}
+{"prompt":"한국의 수도는 어디인가요?","completion":"한국의 수도는 서울입니다.","label":false}
+{"prompt":"한국의 수도는 어디인가요?","completion":"서울특별시가 대한민국의 수도입니다. 정치와 경제의 중심지이기도 합니다.","label":true}
+{"prompt":"What does HTTP stand for?","completion":"HyperText Transfer Protocol.","label":true}
+{"prompt":"What does HTTP stand for?","completion":"HTTP stands for HyperText Transfer Protocol. It is the application-level protocol that web browsers and servers use to exchange pages, images, and other resources, built on a simple request and response model where the client asks and the server answers.","label":false}
+{"prompt":"Translate 'good morning' into Korean.","completion":"좋은 아침입니다 (joeun achimimnida).","label":false}
+{"prompt":"Translate 'good morning' into Korean.","completion":"'좋은 아침' 또는 '안녕하세요'라고 하면 됩니다.","label":true}
+{"prompt":"user: I need a quick snack idea.\nassistant: Do you prefer sweet or salty?\nuser: Salty, please.","completion":"Try roasted chickpeas with a little salt and paprika.","label":true}
+{"prompt":"user: I need a quick snack idea.\nassistant: Do you prefer sweet or salty?\nuser: Salty, please.","completion":"Popcorn with sea salt is quick and light.","label":false}
+{"prompt":"Name a primary color.","completion":"Red is a primary color.","label":false}
+{"prompt":"Name a primary color.","completion":"Blue is one of the primary colors.","label":true}

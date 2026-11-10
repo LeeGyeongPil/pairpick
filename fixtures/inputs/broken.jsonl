@@ -1,0 +1,7 @@
+﻿{"id":"a1","prompt":"Q1","responses":["x1","y1"]}
+
+{"id":"a2","prompt":"Q2","responses":["x2",
+{"id":"a3","prompt":"Q3","response_a":"x3","response_b":"y3"}
+{"id":"a4","prompt":"Q4","chosen":"x4","rejected":"y4"}
+{"foo":1,"bar":2}
+{"prompt":[{"role":"user","content":"Q7"}],"responses":["x7","y7","z7"]}

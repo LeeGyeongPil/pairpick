@@ -1,0 +1,32 @@
+[
+  {
+    "instruction": "What is the capital of France?",
+    "input": "",
+    "chosen": "The capital of France is Paris.",
+    "rejected": "Paris is the capital and largest city of France."
+  },
+  {
+    "instruction": "한국의 수도는 어디인가요?",
+    "input": "",
+    "chosen": "서울특별시가 대한민국의 수도입니다. 정치와 경제의 중심지이기도 합니다.",
+    "rejected": "한국의 수도는 서울입니다."
+  },
+  {
+    "instruction": "What does HTTP stand for?",
+    "input": "",
+    "chosen": "HyperText Transfer Protocol.",
+    "rejected": "HTTP stands for HyperText Transfer Protocol. It is the application-level protocol that web browsers and servers use to exchange pages, images, and other resources, built on a simple request and response model where the client asks and the server answers."
+  },
+  {
+    "instruction": "Translate 'good morning' into Korean.",
+    "input": "",
+    "chosen": "'좋은 아침' 또는 '안녕하세요'라고 하면 됩니다.",
+    "rejected": "좋은 아침입니다 (joeun achimimnida)."
+  },
+  {
+    "instruction": "Name a primary color.",
+    "input": "",
+    "chosen": "Blue is one of the primary colors.",
+    "rejected": "Red is a primary color."
+  }
+]

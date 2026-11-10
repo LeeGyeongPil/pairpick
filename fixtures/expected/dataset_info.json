@@ -1,0 +1,12 @@
+{
+  "pairpick_preference": {
+    "file_name": "llamafactory_alpaca.json",
+    "ranking": true,
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "chosen": "chosen",
+      "rejected": "rejected"
+    }
+  }
+}

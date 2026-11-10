@@ -1,0 +1,10 @@
+[
+  { "id": "s10", "choice": 1, "shownLeft": 0 },
+  { "id": "s02", "choice": 1, "shownLeft": 1 },
+  { "id": "s01", "choice": 0, "shownLeft": 0 },
+  { "id": "s03", "choice": "tie", "shownLeft": 1 },
+  { "id": "s04", "choice": "skip", "shownLeft": 0 },
+  { "id": "s11", "choice": 0, "shownLeft": 1 },
+  { "id": "s12", "choice": 1, "shownLeft": 0 },
+  { "id": "s07", "choice": 0, "shownLeft": 1 }
+]

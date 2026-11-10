@@ -1,0 +1,6 @@
+{"prompt":"What is the capital of France?","chosen":"The capital of France is Paris.","rejected":"Paris is the capital and largest city of France."}
+{"prompt":"한국의 수도는 어디인가요?","chosen":"서울특별시가 대한민국의 수도입니다. 정치와 경제의 중심지이기도 합니다.","rejected":"한국의 수도는 서울입니다."}
+{"prompt":"What does HTTP stand for?","chosen":"HyperText Transfer Protocol.","rejected":"HTTP stands for HyperText Transfer Protocol. It is the application-level protocol that web browsers and servers use to exchange pages, images, and other resources, built on a simple request and response model where the client asks and the server answers."}
+{"prompt":"Translate 'good morning' into Korean.","chosen":"'좋은 아침' 또는 '안녕하세요'라고 하면 됩니다.","rejected":"좋은 아침입니다 (joeun achimimnida)."}
+{"prompt":"user: I need a quick snack idea.\nassistant: Do you prefer sweet or salty?\nuser: Salty, please.","chosen":"Try roasted chickpeas with a little salt and paprika.","rejected":"Popcorn with sea salt is quick and light."}
+{"prompt":"Name a primary color.","chosen":"Blue is one of the primary colors.","rejected":"Red is a primary color."}
