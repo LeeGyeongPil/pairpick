@@ -1,0 +1,18 @@
+[
+  {
+    "id": "a1",
+    "prompt": "What is 2+2?",
+    "responses": ["4", "five"]
+  },
+  {
+    "prompt": "Name a color.",
+    "response_a": "blue",
+    "response_b": "loud"
+  },
+  {
+    "id": "a1",
+    "prompt": "Say hi.",
+    "responses": ["hi", "yo"]
+  },
+  42
+]
