@@ -1,5 +1,7 @@
 # pairpick
 
+**한국어** | [English](README.en.md)
+
 > **English summary** — pairpick is a static web app that runs entirely in your browser: drop in a JSONL file (or a JSON array of rows) with two responses per prompt, pick the better one with the keyboard (`1` / `2`), and export preference files that TRL (DPO, KTO) and LLaMA-Factory read directly. Your data never leaves the browser, and there is no server, account, or database to set up. Run it with `npm install && npm run dev`.
 
 응답 두 개 중 나은 쪽을 키보드로 고르면, DPO·KTO 학습 프레임워크가 읽는 파일이 바로 나옵니다. 라벨링 서버도, 변환 스크립트도 필요 없습니다.
