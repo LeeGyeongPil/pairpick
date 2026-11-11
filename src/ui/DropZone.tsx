@@ -22,7 +22,7 @@ export function DropZone({ onText, onSample }: Props) {
         if (file) void readFile(file)
       }}
     >
-      <p>응답 두 개가 든 JSONL 파일을 여기로 끌어다 놓으세요. 파일은 이 브라우저 밖으로 나가지 않습니다.</p>
+      <p>응답 두 개가 든 JSONL 또는 JSON 배열 파일을 여기로 끌어다 놓으세요. 파일은 이 브라우저 밖으로 나가지 않습니다.</p>
       <label className="button">
         JSONL 파일 선택
         <input

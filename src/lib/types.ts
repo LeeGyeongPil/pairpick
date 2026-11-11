@@ -39,4 +39,6 @@ export type ParseResult = {
   errors: ParseError[]
   /** Shape of the first recognized row, or null when no row was recognized. */
   shape: Shape | null
+  /** Set to 'json-array' only when the input was a JSON array; absent for JSONL. */
+  format?: 'json-array'
 }
