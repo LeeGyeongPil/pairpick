@@ -1,6 +1,6 @@
 # pairpick
 
-> **English summary** — pairpick is a static web app that runs entirely in your browser: drop in a JSONL file with two responses per prompt, pick the better one with the keyboard (`1` / `2`), and export preference files that TRL (DPO, KTO) and LLaMA-Factory read directly. Your data never leaves the browser, and there is no server, account, or database to set up. Run it with `npm install && npm run dev`.
+> **English summary** — pairpick is a static web app that runs entirely in your browser: drop in a JSONL file (or a JSON array of rows) with two responses per prompt, pick the better one with the keyboard (`1` / `2`), and export preference files that TRL (DPO, KTO) and LLaMA-Factory read directly. Your data never leaves the browser, and there is no server, account, or database to set up. Run it with `npm install && npm run dev`.
 
 응답 두 개 중 나은 쪽을 키보드로 고르면, DPO·KTO 학습 프레임워크가 읽는 파일이 바로 나옵니다. 라벨링 서버도, 변환 스크립트도 필요 없습니다.
 
@@ -33,7 +33,7 @@ npm install
 ```bash
 npm run dev
 ```
-출력된 주소(보통 `http://localhost:5173`)를 브라우저로 열고 **"샘플로 시작"**을 누릅니다. 내 파일이 있으면 화면에 끌어다 놓거나 "JSONL 파일 선택"을 누르세요.
+출력된 주소(보통 `http://localhost:5173`)를 브라우저로 열고 **"샘플로 시작"**을 누릅니다. 내 파일(JSONL 또는 JSON 배열)이 있으면 화면에 끌어다 놓거나 "JSONL 파일 선택"을 누르세요.
 
 샘플은 **연습용으로 직접 만든 12행**이며 실제 모델 출력이 아닙니다. 동일 응답·빈 응답·길이 차이·중복 프롬프트·대화형 프롬프트·응답 3개 행이 일부러 들어 있어서, 경고 배지와 내보내기 4종을 모두 볼 수 있습니다.
 
@@ -51,7 +51,7 @@ npm run dev
 ## 사용법
 
 ### 입력 파일 모양
-한 줄에 JSON 하나(JSONL). 아래 세 모양을 자동으로 알아봅니다. 프롬프트는 문자열이거나 `[{role, content}]` 메시지 목록입니다.
+한 줄에 JSON 하나(JSONL), 또는 행 객체를 담은 JSON 배열(`[ {...}, {...} ]`) 파일을 넣을 수 있습니다. 내용이 `[`로 시작하고 전체가 올바른 JSON 배열이면 배열로 읽습니다(배열이 깨져 있으면 JSONL처럼 줄마다 오류를 보여 줍니다). 확장자는 보지 않습니다. 아래 세 모양을 자동으로 알아봅니다. 프롬프트는 문자열이거나 `[{role, content}]` 메시지 목록입니다.
 
 ```jsonl
 {"id":"a1","prompt":"질문","responses":["응답 1","응답 2"]}
@@ -59,7 +59,16 @@ npm run dev
 {"id":"a3","prompt":"질문","chosen":"예전에 고른 답","rejected":"예전에 버린 답"}
 ```
 
-- `id`가 없으면 줄 번호를 씁니다. 응답이 3개 이상이면 앞의 두 개만 비교하고 요약에 개수를 알려 줍니다.
+JSON 배열 예시(`fixtures/inputs/array.json`과 같은 모양):
+
+```json
+[
+  {"id":"a1","prompt":"질문","responses":["응답 1","응답 2"]},
+  {"prompt":"질문","response_a":"응답 A","response_b":"응답 B"}
+]
+```
+
+- `id`가 없으면 줄 번호(JSONL) 또는 몇 번째 항목인지(JSON 배열, 1부터)를 씁니다. 배열 오류도 "N번째 항목"으로 알려 줍니다. 배열 예시는 `fixtures/inputs/array.json`에 있습니다. 빈 파일, 공백뿐인 파일, `[]`를 넣으면 읽을 행이 없다는 안내가 나옵니다. 응답이 3개 이상이면 앞의 두 개만 비교하고 요약에 개수를 알려 줍니다.
 - `chosen`/`rejected` 모양은 **재검토 모드**입니다. 원래 라벨은 화면에 숨기고, 다시 고른 결과가 원래와 얼마나 일치하는지 요약에 보여 줍니다.
 - BOM·윈도우 줄바꿈(CRLF)·빈 줄은 건너뜁니다. 깨진 줄은 `3번째 줄: ...` 형태로 목록에 뜨고, 나머지 행은 그대로 읽습니다.
 
@@ -167,7 +176,7 @@ uv run --no-project --python 3.12 --with datasets==5.2.0 --with trl==1.17.1 pyth
 ## 동작 원리
 ```mermaid
 flowchart LR
-  A[JSONL 파일] --> B[읽기: parse.ts]
+  A[JSONL / JSON 배열] --> B[읽기: parse.ts]
   B --> C[좌우 섞기: order.ts]
   C --> D[키로 고르기]
   D --> E[(IndexedDB 저장)]
@@ -175,14 +184,14 @@ flowchart LR
   F --> G[TRL 3종 + LLaMA-Factory]
 ```
 
-1. **읽기**: 한 줄씩 JSON으로 읽어 세 모양 중 하나로 맞추고, 깨진 줄은 줄 번호와 함께 모읍니다.
+1. **읽기**: 한 줄씩(JSON 배열이면 항목마다) JSON으로 읽어 세 모양 중 하나로 맞추고, 깨진 줄·항목은 번호와 함께 모읍니다.
 2. **좌우 섞기**: 파일 지문과 행 id로 만든 시드로 좌우를 정합니다. 같은 파일이면 항상 같은 배치라서 이어하기가 일관됩니다.
 3. **고르기**: 결정을 `원본 응답 번호 + 왼쪽에 보인 응답`으로 기록합니다.
 4. **저장**: 결정이 바뀔 때마다 브라우저 IndexedDB에 씁니다.
 5. **내보내기**: 결정 목록을 원본 행 순서로 훑어 형식별 파일을 만듭니다. 시각 같은 값을 넣지 않아 같은 결정이면 같은 파일이 나옵니다.
 
 코드 둘러보기:
-- `src/lib/parse.ts` — JSONL 읽기와 입력 모양 감지
+- `src/lib/parse.ts` — JSONL·JSON 배열 읽기와 입력 모양 감지
 - `src/lib/export/trl.ts`, `src/lib/export/llamafactory.ts` — 형식 변환(화면과 무관한 순수 함수)
 - `src/lib/quality.ts` — 품질 경고 4종(동일 응답·빈 응답·길이 비 3배 이상·중복 프롬프트)
 
@@ -198,9 +207,10 @@ flowchart LR
 | KTO 학습에서 라벨이 이상하게 읽힘 | `label`이 문자열 `"true"`나 0/1이면 불리언으로 읽히지 않습니다 | pairpick은 JSON 불리언으로 씁니다. 직접 고친 파일이라면 `true`/`false`로 |
 | 동점으로 고른 행이 내보낸 파일에 없음 | DPO는 우열이 있는 쌍만 쓸 수 있어서 동점·건너뛰기는 뺍니다 | 정상 동작입니다. 개수는 요약 패널에 있습니다 |
 | "이 브라우저에서는 IndexedDB를 쓸 수 없어…" 배너 | 사생활 보호 모드 등으로 저장소를 쓸 수 없음 | 진행 상황 백업 JSON을 내려받아 두었다가 불러오기 |
-| 빈 파일을 넣으면 "0행 읽음"만 나옴 | 읽을 행이 없음(알려진 한계: 안내 문구가 아직 없음). `.json` 배열 파일도 JSONL이 아니라 읽히지 않음 | 한 줄에 객체 하나씩 있는 JSONL로 바꾸기. 파서 오류 문구는 영어로 표시됩니다 |
+| "읽을 행이 없습니다" 안내가 뜸 | 빈 파일, 공백뿐인 파일 또는 `[]`를 넣음 | 행이 든 파일을 다시 고르기. 파서 오류 문구는 영어로 표시됩니다 |
 | LLaMA-Factory 버튼을 누르면 브라우저가 여러 파일 다운로드 허용을 물음 | 이 버튼은 alpaca 파일과 `dataset_info.json` 조각 2개를 연달아 내려받음 | 허용을 선택. 일부 브라우저에서 다운로드가 비면 다시 시도(실제 브라우저 확인은 아직 못 했습니다) |
 | 다시 열었더니 이어하기가 안 됨 | 파일 내용이 바뀌었거나 브라우저가 저장소를 지움 | 같은 파일인지 확인하고, 백업 JSON을 불러오기 |
+| "the file is a single JSON object ..." 오류 1개 | 행 객체 하나를 여러 줄로 들여써 저장한 파일 | 행 객체들을 `[ ]` 배열로 감싸거나, 한 줄에 하나씩(JSONL) 저장 |
 | 읽기 결과에 "찾은 키: foo, bar" 오류 | 입력 행이 세 모양 중 어느 것에도 맞지 않음 | `prompt`와 응답 열(`responses`, `response_a/b`, `chosen/rejected`)을 확인 |
 | `npm install` 경고·실패 | Node 버전이 위 범위(22.22.2+ · 24.15+ · 26+)에 없음 | Node 버전을 올리기 |
 
@@ -210,7 +220,9 @@ npm test        # 단위·화면 테스트(vitest, jsdom, fake-indexeddb)
 npm run build   # 타입 검사 + 정적 빌드
 npm run lint    # oxlint
 ```
-테스트 결과(이 글을 쓸 때 실행): `Test Files 9 passed (9)`, `Tests 44 passed (44)`. 내보내기 골든 파일을 다시 만들려면 `UPDATE_GOLDEN=1 npm test`.
+테스트 결과(이 글을 쓸 때 실행): `Test Files 11 passed (11)`, `Tests 57 passed (57)`. 내보내기 골든 파일을 다시 만들려면 `UPDATE_GOLDEN=1 npm test`.
+
+알려진 한계(0.2.0): 시작 화면의 파일 버튼 문구는 JSON 배열도 받지만 "JSONL 파일 선택"으로 남아 있습니다. 또 JSONL 읽기 결과가 이전과 같은지 확인하는 테스트(`src/lib/parse.array.test.ts`)의 id·줄 번호 단언 하나가 느슨해서(항상 참), 그 부분은 기존 테스트가 일부 보호합니다. 다음 버전에서 고칠 예정입니다.
 
 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
 

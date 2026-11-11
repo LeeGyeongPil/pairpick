@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 - 2026-11-11
+- Accept a JSON array of row objects (same record schema as JSONL). The format is detected from the content, not the file extension; array rows use their 1-based position as the default id and in error messages.
+- Show guidance for empty files, whitespace-only files and `[]`, and report a multi-line single JSON object as one error instead of one per line.
+
 ## 0.1.0 - 2026-11-10
 - First release: static browser app (React, Vite, TypeScript) to pick the better of two responses with the keyboard.
 - Reads JSONL in three shapes (`responses[]`, `response_a`/`response_b`, `chosen`/`rejected`), reports broken lines by line number.
