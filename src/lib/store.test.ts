@@ -57,7 +57,7 @@ describe('progress file', () => {
     const text = serializeProgress('fp', decisions)
     const r = parseProgress(text, 'different')
     expect(r.ok).toBe(false)
-    expect(!r.ok && r.error).toMatch(/지문 불일치/)
+    expect(!r.ok && r.error).toBe('progressOtherFile')
     expect(parseProgress('not json', 'fp').ok).toBe(false)
     expect(parseProgress('{"version":2}', 'fp').ok).toBe(false)
     expect(parseProgress('null', 'fp').ok).toBe(false)
