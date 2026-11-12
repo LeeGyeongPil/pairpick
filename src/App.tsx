@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { applyDecision, nextUndecided, summarize, undoLast } from './lib/decisions.ts'
+import { LANGS, setLang, type Lang } from './i18n.ts'
 import { fingerprint } from './lib/hash.ts'
 import { shownLeft } from './lib/order.ts'
 import { parseJsonl } from './lib/parse.ts'
@@ -14,6 +15,7 @@ import { ParseReport } from './ui/ParseReport.tsx'
 import { StorageBanner } from './ui/StorageBanner.tsx'
 import { SummaryPanel } from './ui/SummaryPanel.tsx'
 import { useHotkeys, type Key } from './ui/useHotkeys.ts'
+import { useLang, useT } from './ui/useLang.ts'
 
 type Session = {
   fileName: string
@@ -30,7 +32,11 @@ const KEY_TO_CHOICE: Record<Exclude<Key, 'u'>, 'left' | 'right' | 'tie' | 'skip'
   s: 'skip',
 }
 
+const LANG_NAMES: Record<Lang, string> = { en: 'English', ko: '한국어' } // each language keeps its own name
+
 export default function App() {
+  const lang = useLang()
+  const m = useT()
   const [session, setSession] = useState<Session | null>(null)
   const [storageOk, setStorageOk] = useState(true)
   const storeRef = useRef<Promise<Store | null> | null>(null)
@@ -107,15 +113,24 @@ export default function App() {
 
   return (
     <main>
-      <h1>pairpick</h1>
-      <p className="tagline">두 응답 중 나은 것을 키보드로 고르고, TRL·LLaMA-Factory 형식으로 내보냅니다. 모든 처리는 브라우저 안에서 끝납니다.</p>
+      <header className="top">
+        <h1>pairpick</h1>
+        <select className="lang" aria-label={m.languageLabel} value={lang} onChange={(e) => setLang(e.target.value as Lang, true)}>
+          {LANGS.map((l) => (
+            <option key={l} value={l}>
+              {LANG_NAMES[l]}
+            </option>
+          ))}
+        </select>
+      </header>
+      <p className="tagline">{m.tagline}</p>
       {!storageOk && <StorageBanner />}
       {!session && <DropZone onText={load} onSample={() => void load(sampleText, 'sample.jsonl')} />}
       {session && (
         <>
           <ParseReport fileName={session.fileName} bytes={session.bytes} result={session.result} />
           <button type="button" onClick={() => setSession(null)}>
-            다른 파일 열기
+            {m.openAnother}
           </button>
           {session.result.items.length > 0 && (
             <>
@@ -128,7 +143,7 @@ export default function App() {
                   warnings={warnings.get(current.id) ?? []}
                 />
               ) : (
-                <p className="done">모든 행을 처리했습니다. 아래에서 내보내거나 u 키로 되돌릴 수 있습니다.</p>
+                <p className="done">{m.done}</p>
               )}
               <SummaryPanel summary={summarize(session.result.items, session.decisions)} />
               <ExportPanel

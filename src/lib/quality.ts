@@ -1,3 +1,4 @@
+import { t } from '../i18n.ts'
 import type { Item } from './types.ts'
 
 export type Warning =
@@ -36,16 +37,17 @@ export function qualityWarnings(items: Item[]): Map<string, Warning[]> {
   return result
 }
 
-/** Short Korean badge text for the UI. */
+/** Short badge text for the UI, in the current language. */
 export function warningLabel(w: Warning): string {
+  const m = t()
   switch (w.kind) {
     case 'identical':
-      return '두 응답이 같음'
+      return m.badgeIdentical
     case 'empty':
-      return '빈 응답'
+      return m.badgeEmpty
     case 'length':
-      return '길이 ' + w.ratio.toFixed(1) + '배 차이'
+      return m.badgeLength(w.ratio.toFixed(1))
     case 'duplicatePrompt':
-      return '같은 프롬프트가 ' + w.count + '번 나옴'
+      return m.badgeDuplicate(w.count)
   }
 }

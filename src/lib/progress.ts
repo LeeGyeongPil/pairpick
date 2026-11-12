@@ -7,7 +7,10 @@ export function serializeProgress(fingerprint: string, decisions: Decision[]): s
   return JSON.stringify(file, null, 2) + '\n'
 }
 
-export type ProgressResult = { ok: true; decisions: Decision[] } | { ok: false; error: string }
+/** Message key of the failure; the UI translates it with the language active at render time. */
+export type ProgressErrorKey = 'progressNotJson' | 'progressBadFormat' | 'progressOtherFile' | 'progressBadDecisions'
+
+export type ProgressResult = { ok: true; decisions: Decision[] } | { ok: false; error: ProgressErrorKey }
 
 function validDecision(d: unknown): d is Decision {
   if (typeof d !== 'object' || d === null) return false
@@ -25,20 +28,17 @@ export function parseProgress(text: string, expectedFingerprint: string): Progre
   try {
     o = JSON.parse(text)
   } catch {
-    return { ok: false, error: '진행 파일을 읽을 수 없습니다: JSON 형식이 아닙니다.' }
+    return { ok: false, error: 'progressNotJson' }
   }
   const f = o as Partial<ProgressFile> | null
   if (!f || f.version !== 1 || typeof f.fingerprint !== 'string' || !Array.isArray(f.decisions)) {
-    return { ok: false, error: '진행 파일 형식이 맞지 않습니다. pairpick이 내려받은 파일인지 확인하세요.' }
+    return { ok: false, error: 'progressBadFormat' }
   }
   if (f.fingerprint !== expectedFingerprint) {
-    return {
-      ok: false,
-      error: '이 진행 파일은 다른 입력 파일의 것입니다(지문 불일치). 같은 JSONL 파일을 연 상태에서 불러오세요.',
-    }
+    return { ok: false, error: 'progressOtherFile' }
   }
   if (!f.decisions.every(validDecision)) {
-    return { ok: false, error: '진행 파일의 결정 목록에 잘못된 항목이 있습니다.' }
+    return { ok: false, error: 'progressBadDecisions' }
   }
   return { ok: true, decisions: f.decisions }
 }
