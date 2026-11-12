@@ -5,7 +5,7 @@
 pairpick is a static web app that runs entirely in your browser: drop in a JSONL file (or a JSON array of rows) with two responses per prompt, pick the better one with the keyboard (`1` / `2`), and export preference files that TRL (DPO, KTO) and LLaMA-Factory read directly. No labeling server or conversion script is needed. Your data never leaves the browser, and there is no server, account, or database to set up. Run it with `npm install && npm run dev`.
 
 ![Start screen](docs/images/01-start.png)
-*Start screen: the drop area for files and the "샘플로 시작" (Start with sample) button. There is no server to install.*
+*Start screen: the drop area for files, the "Start with sample" button, and the language menu (English / 한국어) at the top right. There is no server to install.*
 
 ## What data do DPO and KTO want
 - **DPO** consumes **pairs**: of two responses to the same question, the "better one (`chosen`)" and the "worse one (`rejected`)." It is like an eye exam asking "Is number 1 clearer, or number 2?"
@@ -33,7 +33,9 @@ On a minimal Linux environment, `git`, `node`, and `npm` are all you need. The a
 ```bash
 npm run dev
 ```
-Open the printed address (usually `http://localhost:5173`) in a browser and press **"샘플로 시작"** (Start with sample). If you have your own file (JSONL or a JSON array), drag it onto the screen or press "JSONL 파일 선택" (Choose JSONL file).
+Open the printed address (usually `http://localhost:5173`) in a browser and press **"Start with sample"**. If you have your own file (JSONL or a JSON array), drag it onto the screen or press "Choose JSONL file".
+
+The screen follows your browser language the first time (Korean if it starts with `ko`, otherwise English). Change it any time with the language menu at the top right; see [Language](#language).
 
 The sample is **12 rows written by hand for practice** and is not real model output. It deliberately includes identical responses, an empty response, a length difference, a duplicate prompt, a conversational prompt, and a row with 3 responses, so you can see the warning badges and all 4 export formats.
 
@@ -41,8 +43,8 @@ The sample is **12 rows written by hand for practice** and is not real model out
 *Compare screen: left and right cards, quality warning badges, a progress bar, and the key guide at the bottom (`1` `2` `t` `s` `u`).*
 
 How to read the screen:
-1. The progress bar at the top and a number such as "3 / 12 · 행 s03" (row s03) show your current position.
-2. Badges are quality warnings for this row (for example, "길이 4.2배" — length 4.2x).
+1. The progress bar at the top and a number such as "3 / 12 · row s03" show your current position.
+2. Badges are quality warnings for this row (for example, "Length differs 9.1x").
 3. The left and right cards are the two responses. Which response lands on the left is shuffled (see "Position bias" below).
 4. Pressing a key moves straight to the next row.
 
@@ -70,7 +72,7 @@ A JSON array example (the same shape as `fixtures/inputs/array.json`):
 
 - If there is no `id`, the line number (JSONL) or the item's position (JSON array, from 1) is used. Array errors are also reported as "item N." An array example is in `fixtures/inputs/array.json`. If you feed in an empty file, a whitespace-only file, or `[]`, you get a message that there are no rows to read. With 3 or more responses, only the first two are compared, and the count is shown in the summary.
 - The `chosen`/`rejected` shape is **re-review mode**. The original labels are hidden on screen, and the summary shows how closely your new picks match the originals.
-- A BOM, Windows line endings (CRLF), and blank lines are skipped. A broken line appears in the list in the form `3번째 줄: ...` (line 3: ...), and the remaining rows are read as usual.
+- A BOM, Windows line endings (CRLF), and blank lines are skipped. A broken line appears in the list in the form `Line 3: ...`, and the remaining rows are read as usual.
 
 ### Picking with the keyboard
 | Key | What it does |
@@ -168,11 +170,23 @@ If you don't have `uv`, install it with `curl -LsSf https://astral.sh/uv/install
 
 ### Resuming and backup
 - Decisions are saved automatically to the browser's **IndexedDB**. If you feed in the same file again, you continue where you left off (a fingerprint of the file content decides whether it is the same file; BOM and line-ending differences are ignored).
-- A browser may clear this storage under storage-space policies or in private mode. For important work, save with the **진행 상황 내려받기** (Download progress) button (JSON) under **진행 상황 백업** (Progress backup) in the export panel. With the same file open, uploading it with **진행 상황 불러오기** (Load progress) restores your decisions. A backup from a different file is rejected.
+- A browser may clear this storage under storage-space policies or in private mode. For important work, save with the **Download progress** button (JSON) under **Progress backup** in the export panel. With the same file open, uploading it with **Import progress** restores your decisions. A backup from a different file is rejected.
 - If IndexedDB is unavailable, a notice banner appears at the top of the screen, and you can do the same job with the backup JSON.
 - Above 20MB or 20,000 rows, a warning says the screen may become slow (it currently reads everything at once).
 
 ## Settings
+
+### Language
+The screen is available in **English** and **한국어** (Korean).
+- **Menu**: use the language menu at the top right of the header (next to the title). The whole screen switches at once. You can change it while a file is open, and your decisions stay as they are.
+- **Saved in the browser**: your choice is kept in the browser's `localStorage` under the key `pairpick.lang` (`en` or `ko`), so it is still there after a reload.
+- **First visit only**: if nothing is saved yet, the app looks at the browser language once. A language starting with `ko` (for example `ko-KR`) gives Korean; anything else gives English. This automatic choice is not saved; only a pick from the menu is saved, and a saved choice always wins over the browser language.
+- The `<html lang>` attribute follows the shown language.
+- Export files, progress files, and file names do not depend on the language. Parser error messages (for example, about broken lines) stay in English in both languages.
+
+To reset it, remove the `pairpick.lang` entry in your browser's site data.
+
+### Other settings
 There are no environment variables or config files. There are no network calls either, so no API key is needed. The practice sample data is in `src/sample/sample.jsonl`.
 
 ## How it works
@@ -208,12 +222,12 @@ Code tour:
 | `KeyError: 'chosen'` during training | TRL requires the column names `prompt`/`chosen`/`rejected` (`prompt`/`completion`/`label` for KTO) | Use the file pairpick exported as is, and check that your input's column names fit one of the three shapes above |
 | Labels read strangely in KTO training | If `label` is the string `"true"` or 0/1, it is not read as a boolean | pairpick writes JSON booleans. If you edited the file by hand, use `true`/`false` |
 | A row you marked as a tie is missing from the exported file | DPO can use only pairs with a winner, so ties and skips are dropped | Working as intended. The counts are in the summary panel |
-| Banner "이 브라우저에서는 IndexedDB를 쓸 수 없어…" (IndexedDB cannot be used in this browser...) | Storage is unavailable, for example in private mode | Download the progress backup JSON and load it later |
-| A "읽을 행이 없습니다" (no rows to read) message appears | You fed in an empty file, a whitespace-only file, or `[]` | Choose a file that contains rows again. Parser error messages are shown in English |
+| Banner "IndexedDB is not available in this browser…" | Storage is unavailable, for example in private mode | Download the progress backup JSON and load it later |
+| A "No rows to read" message appears | You fed in an empty file, a whitespace-only file, or `[]` | Choose a file that contains rows again. Parser error messages are shown in English |
 | Pressing the LLaMA-Factory button makes the browser ask about allowing multiple downloads | This button downloads two files in a row: the alpaca file and the `dataset_info.json` snippet | Choose allow. If a download comes up empty in some browser, try again (we have not yet checked this in real browsers) |
 | Resuming did not work after reopening | The file content changed, or the browser cleared the storage | Check that it is the same file, and load the backup JSON |
 | One error "the file is a single JSON object ..." | The file stores a single row object indented over several lines | Wrap the row objects in a `[ ]` array, or save one per line (JSONL) |
-| A read error "찾은 키: foo, bar" (keys found: foo, bar) | The input row does not fit any of the three shapes | Check `prompt` and the response columns (`responses`, `response_a/b`, `chosen/rejected`) |
+| A read error "(keys found: foo, bar)" | The input row does not fit any of the three shapes | Check `prompt` and the response columns (`responses`, `response_a/b`, `chosen/rejected`) |
 | `npm install` warning or failure | The Node version is not in the range above (22.22.2+ · 24.15+ · 26+) | Upgrade Node |
 
 ## Development and contributing
@@ -222,9 +236,9 @@ npm test        # Unit and screen tests (vitest, jsdom, fake-indexeddb)
 npm run build   # Type check + static build
 npm run lint    # oxlint
 ```
-Test results (run when this was written): `Test Files 11 passed (11)`, `Tests 57 passed (57)`. To regenerate the export golden files, run `UPDATE_GOLDEN=1 npm test`.
+Test results (run when this was written): `Test Files 12 passed (12)`, `Tests 72 passed (72)`. On Node 26, `npm test` may print a `localStorage` ExperimentalWarning several times; it is harmless and the tests still pass. To regenerate the export golden files, run `UPDATE_GOLDEN=1 npm test`.
 
-Known limitations (0.2.0): the file button on the start screen also accepts JSON arrays but is still labeled "JSONL 파일 선택" (Choose JSONL file). Also, one id and line-number assertion in the test that checks the JSONL read result is unchanged from before (`src/lib/parse.array.test.ts`) is loose (always true), so that part is only partly protected by the existing tests. We plan to fix it in the next version.
+Known limitations (0.3.0): the file button on the start screen also accepts JSON arrays but is still labeled "Choose JSONL file". Also, one id and line-number assertion in the test that checks the JSONL read result is unchanged from before (`src/lib/parse.array.test.ts`) is loose (always true), so that part is only partly protected by the existing tests. We plan to fix it in the next version.
 
 Please leave bugs and suggestions as issues. The change log is [CHANGELOG.md](CHANGELOG.md).
 
