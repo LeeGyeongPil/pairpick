@@ -1,7 +1,7 @@
 {
   "name": "pairpick",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pick the better of two responses with the keyboard and export TRL / LLaMA-Factory preference files, entirely in the browser.",
   "license": "MIT",
   "type": "module",
