@@ -33,7 +33,7 @@ npm install
 ```bash
 npm run dev
 ```
-출력된 주소(보통 `http://localhost:5173`)를 브라우저로 열고 **"샘플로 시작"**을 누릅니다. 내 파일(JSONL 또는 JSON 배열)이 있으면 화면에 끌어다 놓거나 "JSONL 파일 선택"을 누르세요.
+출력된 주소(보통 `http://localhost:5173`)를 브라우저로 열고 **"샘플로 시작"**을 누릅니다. 내 파일(JSONL 또는 JSON 배열)이 있으면 화면에 끌어다 놓거나 "파일 선택(JSONL·JSON)"을 누르세요.
 
 화면 언어는 처음에는 브라우저 언어를 따릅니다(`ko`로 시작하면 한국어, 아니면 영어). 오른쪽 위의 언어 메뉴로 언제든 바꿀 수 있습니다. [언어](#언어) 절을 보세요.
 
@@ -236,7 +236,7 @@ npm run lint    # oxlint
 ```
 테스트 결과(이 글을 쓸 때 실행): `Test Files 12 passed (12)`, `Tests 73 passed (73)`. Node 26 에서는 `npm test` 중 `localStorage` ExperimentalWarning 이 여러 번 출력될 수 있으며, 무해하고 테스트는 그대로 통과합니다. 내보내기 골든 파일을 다시 만들려면 `UPDATE_GOLDEN=1 npm test`.
 
-알려진 한계(0.3.0): 시작 화면의 파일 버튼 문구는 JSON 배열도 받지만 "JSONL 파일 선택"으로 남아 있습니다. 또 JSONL 읽기 결과가 이전과 같은지 확인하는 테스트(`src/lib/parse.array.test.ts`)의 id·줄 번호 단언 하나가 느슨해서(항상 참), 그 부분은 기존 테스트가 일부 보호합니다. 다음 버전에서 고칠 예정입니다.
+알려진 한계(0.3.2): JSONL 읽기 결과가 이전과 같은지 확인하는 테스트(`src/lib/parse.array.test.ts`)의 id·줄 번호 단언 하나가 느슨해서(항상 참), 그 부분은 기존 테스트가 일부 보호합니다. 다음 버전에서 고칠 예정입니다.
 
 버그·제안은 이슈로 남겨 주세요. 변경 기록은 [CHANGELOG.md](CHANGELOG.md).
 
