@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 - 2026-11-18
+### Fixed
+- Rename the start-screen file button to "Choose file (JSONL / JSON)" / "파일 선택(JSONL·JSON)", since it also accepts JSON arrays.
+
 ## 0.3.1 - 2026-11-18
 ### Fixed
 - Keep row ids unique when the `#<line>` suffix added to a duplicate id collides with another id, so no row is silently skipped or exported with another row's decision.
