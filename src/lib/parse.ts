@@ -68,7 +68,8 @@ function addRow(ctx: Ctx, o: unknown, n: number, notObjectMessage: string): void
   }
 
   let id = String(obj.id ?? n)
-  if (ctx.seen.has(id)) id = id + '#' + n // keep ids unique so decisions never collide
+  // Keep ids unique so decisions never collide; repeat the suffix until the result is unused too.
+  while (ctx.seen.has(id)) id = id + '#' + n
   ctx.seen.add(id)
   ctx.shape ??= found.shape
   ctx.items.push({ id, line: n, prompt: obj.prompt, responses: found.responses, shape: found.shape })

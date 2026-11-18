@@ -3,6 +3,8 @@ import ab from '../../fixtures/inputs/ab.jsonl?raw'
 import broken from '../../fixtures/inputs/broken.jsonl?raw'
 import chosenRejected from '../../fixtures/inputs/chosen_rejected.jsonl?raw'
 import responses from '../../fixtures/inputs/responses.jsonl?raw'
+import { applyDecision, nextUndecided } from './decisions.ts'
+import { toTrlStandard } from './export/trl.ts'
 import { parseJsonl } from './parse.ts'
 
 describe('parseJsonl', () => {
@@ -51,5 +53,27 @@ describe('parseJsonl', () => {
 
   it('returns an empty result for empty text', () => {
     expect(parseJsonl('')).toEqual({ items: [], errors: [], shape: null })
+  })
+
+  it('keeps ids unique when a suffixed id collides with an existing id', () => {
+    const row = (id: string, k: number) => `{"id":"${id}","prompt":"P${k}","responses":["x${k}","y${k}"]}`
+    const rows = [row('a', 1), row('a#3', 2), row('a', 3)]
+    const jsonl = parseJsonl(rows.join('\n'))
+    const arr = parseJsonl('[' + rows.join(',') + ']')
+    for (const r of [jsonl, arr]) {
+      expect(new Set(r.items.map((i) => i.id)).size).toBe(3)
+      expect(r.items[0]?.id).toBe('a')
+      expect(r.items[1]?.id).toBe('a#3')
+    }
+    const items = jsonl.items
+    const decisions = applyDecision([], { id: items[1]!.id, choice: 1, shownLeft: 0 })
+    expect(nextUndecided(items, decisions)?.line).toBe(1)
+    const after1 = applyDecision(decisions, { id: items[0]!.id, choice: 0, shownLeft: 0 })
+    expect(nextUndecided(items, after1)?.line).toBe(3)
+    const all = applyDecision(after1, { id: items[2]!.id, choice: 1, shownLeft: 0 })
+    expect(nextUndecided(items, all)).toBeUndefined()
+    const exported = toTrlStandard(items, decisions)
+    expect(exported).toContain('P2')
+    expect(exported).not.toContain('P3')
   })
 })
