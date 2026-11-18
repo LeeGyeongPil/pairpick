@@ -236,7 +236,7 @@ npm test        # Unit and screen tests (vitest, jsdom, fake-indexeddb)
 npm run build   # Type check + static build
 npm run lint    # oxlint
 ```
-Test results (run when this was written): `Test Files 12 passed (12)`, `Tests 72 passed (72)`. On Node 26, `npm test` may print a `localStorage` ExperimentalWarning several times; it is harmless and the tests still pass. To regenerate the export golden files, run `UPDATE_GOLDEN=1 npm test`.
+Test results (run when this was written): `Test Files 12 passed (12)`, `Tests 73 passed (73)`. On Node 26, `npm test` may print a `localStorage` ExperimentalWarning several times; it is harmless and the tests still pass. To regenerate the export golden files, run `UPDATE_GOLDEN=1 npm test`.
 
 Known limitations (0.3.0): the file button on the start screen also accepts JSON arrays but is still labeled "Choose JSONL file". Also, one id and line-number assertion in the test that checks the JSONL read result is unchanged from before (`src/lib/parse.array.test.ts`) is loose (always true), so that part is only partly protected by the existing tests. We plan to fix it in the next version.
 

@@ -234,7 +234,7 @@ npm test        # 단위·화면 테스트(vitest, jsdom, fake-indexeddb)
 npm run build   # 타입 검사 + 정적 빌드
 npm run lint    # oxlint
 ```
-테스트 결과(이 글을 쓸 때 실행): `Test Files 12 passed (12)`, `Tests 72 passed (72)`. Node 26 에서는 `npm test` 중 `localStorage` ExperimentalWarning 이 여러 번 출력될 수 있으며, 무해하고 테스트는 그대로 통과합니다. 내보내기 골든 파일을 다시 만들려면 `UPDATE_GOLDEN=1 npm test`.
+테스트 결과(이 글을 쓸 때 실행): `Test Files 12 passed (12)`, `Tests 73 passed (73)`. Node 26 에서는 `npm test` 중 `localStorage` ExperimentalWarning 이 여러 번 출력될 수 있으며, 무해하고 테스트는 그대로 통과합니다. 내보내기 골든 파일을 다시 만들려면 `UPDATE_GOLDEN=1 npm test`.
 
 알려진 한계(0.3.0): 시작 화면의 파일 버튼 문구는 JSON 배열도 받지만 "JSONL 파일 선택"으로 남아 있습니다. 또 JSONL 읽기 결과가 이전과 같은지 확인하는 테스트(`src/lib/parse.array.test.ts`)의 id·줄 번호 단언 하나가 느슨해서(항상 참), 그 부분은 기존 테스트가 일부 보호합니다. 다음 버전에서 고칠 예정입니다.
 

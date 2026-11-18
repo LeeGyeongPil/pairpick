@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2026-11-18
+### Fixed
+- Keep row ids unique when the `#<line>` suffix added to a duplicate id collides with another id, so no row is silently skipped or exported with another row's decision.
+
 ## 0.3.0 - 2026-11-12
 - Add an English / 한국어 language menu in the header. The choice is saved in the browser; the first visit follows the browser language (Korean if it starts with "ko", otherwise English) and `<html lang>` follows the choice.
 - Export files, progress files and file names are unchanged and do not depend on the language.
