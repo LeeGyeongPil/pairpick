@@ -53,7 +53,7 @@ describe('labeling flow', () => {
     const user = userEvent.setup()
     render(<App />)
     const file = new File(['{"prompt":"p","responses":["a","b"]}\n{oops\n'], 'x.jsonl')
-    await user.upload(screen.getByLabelText(/JSONL 파일 선택/), file)
+    await user.upload(screen.getByLabelText(/파일 선택/), file)
     expect(await screen.findByText(/2번째 줄: invalid JSON/)).toBeTruthy()
     expect(screen.getByText(/1행 읽음/)).toBeTruthy()
   })

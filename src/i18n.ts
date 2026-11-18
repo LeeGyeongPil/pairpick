@@ -15,7 +15,7 @@ const en = {
   done: 'All rows are done. Export below, or press u to undo.',
 
   dropHint: 'Drop a JSONL file or JSON array with two responses per row here. Files never leave this browser.',
-  chooseFile: 'Choose JSONL file',
+  chooseFile: 'Choose file (JSONL / JSON)',
   startSample: 'Start with sample',
   sampleHint: 'The sample is 12 hand-written practice rows, not real model output.',
 
@@ -102,7 +102,7 @@ const ko: Messages = {
   done: '모든 행을 처리했습니다. 아래에서 내보내거나 u 키로 되돌릴 수 있습니다.',
 
   dropHint: '응답 두 개가 든 JSONL 또는 JSON 배열 파일을 여기로 끌어다 놓으세요. 파일은 이 브라우저 밖으로 나가지 않습니다.',
-  chooseFile: 'JSONL 파일 선택',
+  chooseFile: '파일 선택(JSONL·JSON)',
   startSample: '샘플로 시작',
   sampleHint: '샘플은 연습용으로 직접 만든 12행이며 실제 모델 출력이 아닙니다.',
 
